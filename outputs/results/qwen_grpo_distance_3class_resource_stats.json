@@ -1,0 +1,12 @@
+{
+  "experiment": "inference_grpo",
+  "start_time": 15921456.337503755,
+  "end_time": 15923285.95155598,
+  "elapsed_seconds": 1829.614,
+  "n_samples": 4934,
+  "throughput_samples_per_sec": 2.6967,
+  "peak_vram_mb": 0.0,
+  "peak_ram_mb": 870.86,
+  "emissions_kg_co2": 0.02389668552440618,
+  "extra": {}
+}

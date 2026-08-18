@@ -1,0 +1,290 @@
+# =============================================================================
+# paper2026 — Configuração Global
+# Classificação de Afinidade Perfil-Tema de Pesquisadores Brasileiros
+# Dataset: LeanDL-HPC 2025
+# =============================================================================
+
+project:
+  name: "paper2026"
+  seed: 133
+  device: "cuda"
+
+# -----------------------------------------------------------------------------
+# Paths
+# -----------------------------------------------------------------------------
+paths:
+  raw_data:       "data/raw/leandl_oesnpg_dados.parquet"
+  2class_training: "data/processed/2class/df_treino_estratificado_70_10_20_2class_truncated.parquet"
+  2class_validation: "data/processed/2class/df_validacao_estratificado_70_10_20_2class_truncated.parquet"
+  2class_test: "data/processed/2class/df_teste_estratificado_70_10_20_2class_truncated.parquet"
+  3class_training: "data/processed/3class/df_treino_estratificado_70_10_20_3class_truncated.parquet"
+  3class_validation: "data/processed/3class/df_validacao_estratificado_70_10_20_3class_truncated.parquet"
+  3class_test: "data/processed/3class/df_teste_estratificado_70_10_20_3class_truncated.parquet"
+  processed_dir:  "data/processed"
+  models_dir:     "models"
+  outputs_dir:    "outputs"
+  logs_dir:       "outputs/logs"
+  results_dir:    "outputs/results"
+  plots_dir:      "outputs/plots"
+
+# -----------------------------------------------------------------------------
+# Classificação
+# -----------------------------------------------------------------------------
+classification:
+  mode: "3class" # "3class" | "2class"
+  labels_3class: ["ALTA", "MEDIA", "BAIXA"]
+  labels_2class: ["ALTA", "BAIXA"]
+  experiment: "sft_cot" #base, few_shot, sft, sft_cot ou grpo
+
+# -----------------------------------------------------------------------------
+# Modelo Base
+# -----------------------------------------------------------------------------
+model:
+  name: "unsloth/Qwen3-14B-unsloth-bnb-4bit"
+  grpo_name: "/home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters" #modelo sft_cot 3 class, mudar de acordo com necessidade
+  max_seq_length: 2560
+  load_in_4bit: true
+  dtype: "bfloat16"
+
+# -----------------------------------------------------------------------------
+# LoRA (Compartilhado)
+# -----------------------------------------------------------------------------
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+  bias: "none"
+  use_gradient_checkpointing: "unsloth"
+  random_state: 133
+  use_rslora: true
+
+# -----------------------------------------------------------------------------
+# SFT — Supervised Fine-Tuning
+# -----------------------------------------------------------------------------
+sft:
+  adapter_name: "{experiment}_{mode}_{model}"
+  output_dir:   "models/{experiment}_{mode}_{model}"
+  num_train_epochs: 3
+  per_device_train_batch_size: 64
+  per_device_eval_batch_size:  1
+  gradient_accumulation_steps: 1
+  learning_rate: 5.0e-4
+  warmup_ratio: 0.05
+  lr_scheduler_type: "cosine"
+  weight_decay: 0.01
+  fp16: false
+  bf16: true
+  logging_steps: 20
+  eval_steps: 200
+  save_steps: 200
+  save_total_limit: 2
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  report_to: "none"
+  optim: "adamw_8bit"
+  packing: True
+
+# -----------------------------------------------------------------------------
+# GRPO — Group Relative Policy Optimization
+# -----------------------------------------------------------------------------
+grpo:
+  adapter_name: "{experiment}_{mode}_{model}"
+  output_dir:   "models/{experiment}_{mode}_{model}"
+  num_train_epochs: 1
+  per_device_train_batch_size: 32
+  gradient_accumulation_steps: 1
+  learning_rate: 5.0e-6
+  max_grad_norm: 0.1
+  warmup_ratio: 0.03
+  lr_scheduler_type: "cosine"
+  bf16: true
+  fp16: false
+  optim: "adamw_8bit"
+  report_to: "none"
+  num_generations: 4
+  max_prompt_length: 1536
+  max_completion_length: 1024
+  temperature: 0.7
+  beta: 0.001
+  logging_steps: 5
+  save_steps: 50
+  save_total_limit: 3
+  rwfn_accuracy_mode: "standard" #standard ou distance
+
+# -----------------------------------------------------------------------------
+# Inferência (vLLM)
+# -----------------------------------------------------------------------------
+inference:
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.90
+  max_model_len: 8192
+  max_new_tokens: 1024
+  temperature: 0.0
+  top_p: 1.0
+  repetition_penalty: 1.1
+  batch_size: 64
+
+# -----------------------------------------------------------------------------
+# Prompts
+# -----------------------------------------------------------------------------
+prompts:
+  system_base: |
+    Você é um especialista em análise semântica e classificação temática acadêmica. 
+    Sua tarefa é analisar a afinidade entre um perfil acadêmico (baseado em sua área, resumo e palavras-chave) e um tema estratégico e realizar uma classificação.
+
+  system_3class: |
+    {system_base}
+    
+    Classifique o nível de afinidade utilizando ESTRITAMENTE uma destas três categorias:
+    * ALTA: há forte e evidente relação entre as competências do perfil e o tema.
+    * MEDIA: há proximidade semântica parcial ou tangencial entre o perfil e o tema.
+    * BAIXA: há pouca ou nenhuma correspondência semântica real entre o tema e o perfil.
+
+  system_2class: |
+    {system_base}
+    
+    Classifique o nível de afinidade utilizando ESTRITAMENTE uma destas duas categorias:
+    * ALTA: há forte relação ou clara proximidade semântica entre as competências do perfil e o tema.
+    * BAIXA: há pouca ou nenhuma correspondência semântica real, sendo a relação fraca ou inexistente.
+
+  dados_template: |
+    TEMA ESTRATÉGICO:
+    Nome: {nome_tema}
+    Palavras-chave: {palavras_chave_tema}
+
+    PERFIL ACADÊMICO:
+    Produção: {nome_producao_perfil}
+    Resumo: {resumo_perfil}
+    Palavras-chave: {palavras_chave_perfil}
+    Área de Concentração: {area_concentracao_perfil}
+
+  base_instruction: |
+    Avalie os dados abaixo e classifique a afinidade. 
+    Responda APENAS com a palavra da classe adequada, sem incluir explicações ou formatação adicional.
+    
+    {dados}
+
+  grpo_instruction: |
+    Avalie os dados abaixo e classifique a afinidade.
+    Primeiro, escreva sua justificativa detalhada comparando o perfil e o tema dentro das tags <think> e </think>.
+    Depois, forneça ESTRITAMENTE a classe final (apenas uma palavra) dentro das tags <answer> e </answer>.
+    
+    {dados}
+
+  sft_cot_assistant: |
+    <think>
+    {justificativa_final}
+    </think>
+    <answer>{nivel_classificacao}</answer>
+
+  sft_assistant: |
+    {nivel_classificacao}
+
+  few_shot_examples_3class: |
+
+    (EXEMPLO CLASSE: ALTA)
+
+    TEMA ESTRATÉGICO:
+    Nome: Turismo: gestão e hospitalidade
+    Palavras-chave: eventos turísticos, observatório do turismo, ordenamento territorial, desenvolvimento sustentável, turismo sustentável, atração de investimentos, capacitação profissional, apoio à temporada de praia, infraestrutura turística, promoção do turismo
+
+    PERFIL ACADÊMICO:
+    Produção: TURISMO SUSTENTÁVEL EM PRAIA DE RIO: PERCEPÇÃO AMBIENTAL NA PRAIA DA TARTARUGA NO MUNICÍPIO DE PEIXE – TOCANTINS
+    Resumo: O BRASIL DETÉM GRANDES PATRIMÔNIOS NATURAIS, O QUE PERMITE UMA OFERTA TURÍSTICA DIVERSIFICADA NO SEU TERRITÓRIO. NO ESTADO DO TOCANTINS, AS PRAIAS DE RIOS SÃO ATRATIVOS MUITO PROCURADOS DURANTE O PERÍODO DE ESTIAGEM, EM ESPECIAL, NOS MESES DE JULHO E AGOSTO. ESTE TRABALHO INVESTIGOU A PERCEPÇÃO AMBIENTAL SOBRE O TURISMO NA PRAIA DA TARTARUGA, NO MUNICÍPIO DE PEIXE, TOCANTINS. O TURISMO PODE SER UMA ATIVIDADE SUSTENTÁVEL, COM VIABILIDADE ECONÔMICA, SE FOR PLANEJADO E DELINEADO, CONSIDERANDO TODAS AS DIMENSÕES QUE O ENVOLVEM, COMO A DIMENSÃO AMBIENTAL, ECONÔMICA E SOCIAL, MAS PODE APRESENTAR IMPACTOS NEGATIVOS EM GRANDES PROPORÇÕES, QUANDO NÃO EXISTE PLANEJAMENTO, FISCALIZAÇÃO OU PREOCUPAÇÃO AMBIENTAL NO DESTINO TURÍSTICO. A PRAIA DA TARTARUGA É UMA PRAIA DE RIO, LOCALIZADA NA REGIÃO SUL DO ESTADO DO TOCANTINS, NO MUNICÍPIO DE PEIXE. A ATIVIDADE TURÍSTICA NA LOCALIDADE JÁ É CONSOLIDADA, ATRAINDO MUITAS PESSOAS NA TEMPORADA DE PRAIA. ASSIM, ESTE ESTUDO PROPÔS VERIFICAR, ATRAVÉS DA REALIZAÇÃO DE ENTREVISTAS, A PERCEPÇÃO AMBIENTAL DE TURISTAS E DE PRESTADORES DE SERVIÇOS, TRANSPORTE E COMÉRCIO QUE ATUAM DURANTE A TEMPORADA NO ATRATIVO. A PESQUISA É DE CARÁTER QUALITATIVO, DE CUNHO FENOMENOLÓGICO. A ANÁLISE DOS DADOS FOI INTERPRETADA COM BASE NO MÉTODO FENOMENOLÓGICO DE COLAIZZI. IDENTIFICOU-SE QUE OS TURISTAS POSSUEM ENTENDIMENTO SOBRE O TURISMO SUSTENTÁVEL, MAS, AINDA ASSIM, PRATICAM ATITUDES QUE CAUSAM DANOS AO MEIO AMBIENTE. O LUGAR FOI CONSIDERADO SEGURO PARA OS ENTREVISTADOS, QUE SE SENTEM BEM EM MEIO À PAISAGEM DO LUGAR E AVALIAM POSITIVAMENTE OS ASPECTOS QUE COMPÕEM A PAISAGEM. A MAIORIA DOS PRESTADORES DE SERVIÇOS DESCONHECE O CONCEITO DE SUSTENTABILIDADE, NÃO PERCEBEM OS DANOS DA ATIVIDADE TURÍSTICA NA PRAIA. DURANTE A TEMPORADA, ELES CONSEGUEM LUCRAR MAIS, EM UM ÚNICO MÊS, DO QUE TRABALHANDO, DIARIAMENTE, NA CIDADE EM SUAS EMPRESAS. NOS RESULTADOS SOBRE A PANDEMIA DE COVID 19, OS PRESTADORES DE SERVIÇO NARRARAM QUE FORAM MUITO PREJUDICADOS ECONOMICAMENTE, DE VÁRIAS FORMAS. ESSES DADOS MOSTRAM A IMPORTÂNCIA DO INVESTIMENTO EM EDUCAÇÃO AMBIENTAL E SUSTENTABILIDADE, DE UM DESTINO TURÍSTICO, PARA O DESENVOLVIMENTO DA ECONOMIA LOCAL, QUE DEPENDE DA CONSERVAÇÃO DESSE PATRIMÔNIO.
+    Palavras-chave: TURISMO;SUSTENTABILIDADE;PERCEPÇÃO;RECURSOS NATURAIS;MEIO AMBIENTE.
+    Área de Concentração: CIÊNCIAS DO AMBIENTE
+
+    CLASSE PREVISTA:
+    ALTA
+
+    (EXEMPLO CLASSE: MEDIA)
+    TEMA ESTRATÉGICO:
+    Nome: Desertificação e Agricultura Regenerativa
+    Palavras-chave: tecnologias sustentáveis, biodiversidade, governança ambiental, segurança hídrica, agricultura familiar, agroecologia, conservação de solo, sustentabilidade ambiental, mudanças climáticas
+
+    PERFIL ACADÊMICO:
+    Produção: AGRICULTURA URBANA E SEGURANÇA ALIMENTAR E NUTRICIONAL: UM ESTUDO DE CASO DA CONTRIBUIÇÃO DAS PRINCIPAIS HORTAS COMUNITÁRIAS POVO UNIDO (JUAZEIRO-BA) E ASSENTAMENTO MANDACARU (PETROLINA-PE)
+    Resumo: AS HORTAS COMUNITÁRIAS CERTIFICADAS SÃO ESPAÇOS CAPAZES DE FORNECER PRODUTOS DE QUALIDADE E QUE GARANTEM A SOBERANIA ALIMENTAR, NUTRICIONAL DA POPULAÇÃO E O FORTALECIMENTO DA SEGURANÇA ALIMENTAR E NUTRICIONAL. ESSA PESQUISA APRESENTA AS DUAS MAIORES HORTAS ORGÂNICAS CERTIFICADAS DOS MUNICÍPIOS DE JUAZEIRO-BA E PETROLINA-PE. O OBJETIVO DA PESQUISA FOI VERIFICAR A RELEVÂNCIA DESSAS DUAS HORTAS PARA A POPULAÇÃO LOCAL, A IMPORTÂNCIA DA AGRICULTURA URBANA E PERIURBANA DE BASE ECOLÓGICA, NOS ASPECTOS ECONÔMICOS, AMBIENTAIS, CULTURAIS E SOCIAIS. BUSCA- SE IDENTIFICAR, ATRAVÉS DESSES ESPAÇOS, AS INSTITUIÇÕES ENVOLVIDAS NO PROCESSO DE FORTALECIMENTO DA PRODUÇÃO ORGÂNICA E AGROECOLÓGICA DAS DUAS CIDADES. A METODOLOGIA UTILIZADA FOI A ANÁLISE DOCUMENTAL, DE CARÁTER QUANTI-QUALITATIVO, ANÁLISE DE LITERATURA E PESQUISAS SOBRE AUTORES E TRABALHOS SOBRE O TEMA. ALÉM DA DESCRIÇÃO AUTONARRATIVA DA EXPERIÊNCIA PROFISSIONAL DA PESQUISADORA. OS AGRICULTORES/AS AINDA ENCONTRAM GRANDES DIFICULDADES NO QUE SE REFERE À COMERCIALIZAÇÃO E À FALTA DE POLÍTICAS PÚBLICAS QUE FORTALEÇAM ESSES ESPAÇOS. APESAR DISSO, MENCIONAM-SE ALGUMAS INICIATIVAS IMPORTANTES COMO AS FEIRAS DE ORGÂNICOS, O TRABALHO DAS UNIVERSIDADES, ATRAVÉS DE NÚCLEOS QUE DESENVOLVEM ESTUDOS E PESQUISAS EM AGROECOLOGIA, A CRIAÇÃO DA REDE DE AGROECOLOGIA E AS LEIS MUNICIPAIS CRIADAS NO MUNICÍPIO DE PETROLINA, ALÉM DA RECRIAÇÃO DO CONSELHO NACIONAL DE SEGURANÇA ALIMENTAR E NUTRICIONAL (CONSEA). FOI POSSÍVEL VERIFICAR QUE ESSAS INICIATIVAS SÃO FUNDAMENTAIS PARA DIRIMIR OS GARGALOS DA PRODUÇÃO ORGÂNICA DE BASE AGROECOLÓGICA NAS DUAS CIDADES. O PRODUTO APRESENTADO FOI UM PODCAST, ELABORADO ATRAVÉS DAS FALAS DE AGRICULTORES/AS, TÉCNICO E CONSUMIDOR.
+    Palavras-chave: HORTAS COMUNITÁRIAS ORGÂNICAS;AGROECOLOGIA;POLÍTICAS PÚBLICAS;COMERCIALIZAÇÃO
+    Área de Concentração: EXTENSÃO RURAL E DESENVOLVIMENTO
+
+    CLASSE PREVISTA:
+    MEDIA
+    
+    (EXEMPLO CLASSE: BAIXA)
+
+    TEMA ESTRATÉGICO:
+    Nome: Saneamento Básico: pesquisa e inovação
+    Palavras-chave: desenvolvimento sustentável, economia verde, segurança hídrica, inovação tecnológica, universalização do saneamento, gestão de recursos hídricos, infraestrutura de saneamento, educação ambiental, parcerias interinstitucionais, mudanças climáticas
+
+    PERFIL ACADÊMICO:
+    Produção: PRODUÇÕES DE TECNOLOGIA SOCIAL NOS PROGRAMAS DE PÓS-GRADUAÇÃO DA UNIVERSIDADE FEDERAL DO MARANHÃO: PERSPECTIVAS E POSSIBILIDADES
+    Resumo: O OBJETIVO DA PESQUISA É IDENTIFICAR AS PRODUÇÕES DE TECNOLOGIAS SOCIAIS (TS) NOS PROGRAMAS DE PÓS-GRADUAÇÃO DA UNIVERSIDADE FEDERAL DO MARANHÃO E PROPOR A ELABORAÇÃO DE INSTRUMENTOS DE DIVULGAÇÃO PARA A COMUNIDADE ACADÊMICA E LOCAL. JUSTIFICA-SE PELA NECESSIDADE DE VISIBILIDADE, CONHECIMENTO E INCENTIVO À PRODUÇÃO DE TS NA ACADEMIA, A PARTIR DA DIVULGAÇÃO DE SOLUÇÕES INOVADORAS DESENVOLVIDAS EM DIFERENTES ÁREAS DO ENSINO, PESQUISA E EXTENSÃO DA UNIVERSIDADE. CONSIDERA-SE, AINDA, QUE AS TS SÃO FERRAMENTAS QUE LEVAM AO EMPODERAMENTO DA PRÓPRIA INSTITUIÇÃO, UMA VEZ QUE ATENDERÃO ÀS DEMANDAS DA SOCIEDADE NO QUE SE REFERE À DIMINUIÇÃO DOS ÍNDICES DE DESIGUALDADES SOCIAIS. PRETENDENDO ATINGIR OS OBJETIVOS, REALIZOU-SE OS PROCEDIMENTOS METODOLÓGICOS EM DUAS FASES: A PRIMEIRA, FOI ATRAVÉS DA COLETA DE DADOS ATRAVÉS DE LEVANTAMENTO BIBLIOGRÁFICO PARA ENTENDIMENTO SOBRE AS TS; JÁ A SEGUNDA FASE FOI DIVIDIDA EM TRÊS ETAPAS: NA ETAPA INICIAL, FOI ATRAVÉS DA PESQUISA EXPLORATÓRIA COM OBJETIVO DE IDENTIFICAR AS PRODUÇÕES DOS MESTRADOS COM PROPOSIÇÃO DE TS, BUSCANDO-SE MATERIAIS NOS SITES DOS PROGRAMAS DE PÓS-GRADUAÇÃO E NO PORTAL DA BIBLIOTECA DIGITAL DE TESES E DISSERTAÇÕES DA UFMA, SENDO SELECIONADOS TRABALHOS QUE APRESENTAVAM CARACTERÍSTICAS DAS TS, ATRAVÉS DOS PARÂMETROS PROPOSTOS PELO INSTITUTO DE TECNOLOGIA SOCIAL (ITS), FUNDAÇÃO BANCO DO BRASIL (FBB), PROJETOS DE LEI N.º 111/2011 E N.º 3329/2015, QUE CRIAM A POLÍTICA NACIONAL DE TECNOLOGIA SOCIAL (PNLS); NA ETAPA INTERMEDIÁRIA, APLICOU-SE QUESTIONÁRIOS A ACADÊMICOS QUE DESENVOLVERAM TRABALHOS DE CONCLUSÃO DE CURSOS DE PÓS-GRADUAÇÃO, COM CARACTERÍSTICAS DE TS, E AOS COORDENADORES DE CURSOS DE PÓSGRADUAÇÃO (MESTRADO) COM OBJETIVO DE ANALISAR A VIABILIDADE DA PRODUÇÃO DE TS; POR FIM, OS DADOS DA PESQUISA FORAM ORGANIZADOS NA FORMA DE RELATÓRIO TÉCNICO CONCLUSIVO (RTC) E DISPONIBILIZADOS À INSTITUIÇÃO FONTE DA PESQUISA (UFMA). APRESENTA-SE, COMO RESULTADO DO MAPEAMENTO DOS TRABALHOS DE PÓS-GRADUAÇÃO STRICTO SENSU NA UNIVERSIDADE FEDERAL DO MARANHÃO, A ANÁLISE DE 1.937 TRABALHOS, TOTALIZANDO 24 TRABALHOS COM CARACTERÍSTICAS E PARÂMETROS DE TS. A PARTIR DA DISCUSSÃO, FOI CONDUZIDA UMA ANÁLISE TEMÁTICA PARA AVERIGUAR SE ESTES TRABALHOS SEGUIAM TODOS OS PADRÕES PROPOSTOS PARA UMA TS. O ESTUDO VISA INCENTIVAR A UTILIZAÇÃO DO CONHECIMENTO PRODUZIDO NA UNIVERSIDADE PARA COMBATER OS PROBLEMAS SOCIOECONÔMICOS, PRINCIPAL MOTIVO DE ALINHAMENTO COM A TS, E QUE REFORÇA O PAPEL DAS INSTITUIÇÕES PÚBLICAS COMO DA UNIVERSIDADE FEDERAL DO MARANHÃO. COM ESTE ESTUDO, CONCLUI-SE QUE AS TECNOLOGIAS SOCIAIS SÃO FERRAMENTAS IMPORTANTES DE INCLUSÃO SOCIAL, ALÉM DE AUXILIAR NA FORMAÇÃO ACADÊMICA POR MEIO DA PESQUISA E EXTENSÃO. NO ENTANTO, A PRODUÇÃO DE TS NO MEIO ACADÊMICO NÃO É CONSTANTE. O QUE EVIDENCIA A NECESSIDADE DE ADEQUAÇÃO DA UNIVERSIDADE AOS PRINCÍPIOS E PARÂMETROS QUE POSSAM LHE CONCEDER O STATUS DE INSTITUIÇÃO NÃO COMO ASSISTENCIALISTA E SIM DE PROTAGONISTA NO COMBATE ÀS VULNERABILIDADES SOCIAIS.
+    Palavras-chave: TECNOLOGIA SOCIAL;SUSTENTABILIDADE;UNIVERSIDADE PÚBLICA;PESQUISA E EXTENSÃO
+    Área de Concentração: PROPRIEDADE INTELECTUAL E TRANSFERÊNCIA DE TECNOLOGIA PARA INOVAÇÃO
+
+    CLASSE PREVISTA:
+    BAIXA
+    
+  few_shot_examples_2class: |
+    (EXEMPLO CLASSE: ALTA)
+    TEMA ESTRATÉGICO:
+    Nome: Popularização da Ciência
+    Palavras-chave: construção de senso crítico, divulgadores científicos, desenvolvimento humano, políticas públicas, popularização da ciência, impactos sociais, combate à desinformação, projetos de extensão universitária, educação ambiental, acesso ao conhecimento, equidade na educação, inovação tecnológica, engajamento público com a ciência, alfabetização científica, inclusão social, democratização do saber, combate ao negacionismo científico, aproximações com a educação básica
+
+    PERFIL ACADÊMICO:
+    Produção: O PAPEL DAS ATIVIDADES EXPERIMENTAIS NO FOMENTO DA APRENDIZAGEM COLABORATIVA DE CIÊNCIAS NOS ANOS INICIAIS
+    Resumo: ESSA DISSERTAÇÃO TEM POR OBJETIVOS GERAIS INVESTIGAR O DESENVOLVIMENTO DA ALFABETIZAÇÃO CIENTÍFICA NAS SÉRIES INICIAIS ATRAVÉS DO ENSINO POR INVESTIGAÇÃO REALIZADO POR EXPERIMENTOS; E VERIFICAR O PROCESSO ARGUMENTATIVO DOS ALUNOS E OS INDICADORES DA ALFABETIZAÇÃO CIENTÍFICA POR MEIO DO ENSINO INVESTIGATIVO. PRETENDE-SE, AINDA, IDENTIFICAR O PROCESSO ARGUMENTATIVO DOS ALUNOS ATRAVÉS DO ENSINO POR INVESTIGAÇÃO NAS AULAS DE CIÊNCIAS DA NATUREZA; ANALISAR QUAIS INDICADORES DA ALFABETIZAÇÃO CIENTÍFICA SÃO DESENVOLVIDOS NOS ESTUDANTES NO PROCESSO ARGUMENTATIVO; VERIFICAR SE A REALIZAÇÃO DE EXPERIMENTOS E SIMULAÇÕES EM SALA DE AULA FAVORECE A APROPRIAÇÃO DE CONHECIMENTOS CIENTÍFICOS ESTRUTURADOS NOS EIXOS DA ALFABETIZAÇÃO CIENTÍFICA. A QUESTÃO-PROBLEMA ELABORADA PARA SER RESPONDIDA É A SEGUINTE: EM QUE MEDIDA OS EXPERIMENTOS E SIMULAÇÕES FAVORECEM A APROPRIAÇÃO DA CIÊNCIA EM ESTUDANTES DAS SÉRIES INICIAIS? A ABORDAGEM É QUALITATIVA, RECORRENDO À PESQUISA BIBLIOGRÁFICA PARA COMPOR O REFERENCIAL TEÓRICO DA PESQUISA, RAZÃO PELA QUAL SE PODE CONSIDERÁ-LA TAMBÉM COMO EXPLORATÓRIA. TAMBÉM É PESQUISA DE CAMPO E APLICADA, ENQUANTO SERÃO APLICADOS EXPERIMENTOS EM SALAS DE AULA DE UMA ESCOLA PÚBLICA DO MUNICIPAL DE SOROCABA/SP, SENDO UTILIZADA, TAMBÉM, A TÉCNICA DE OBSERVAÇÃO PARA ANÁLISE DAS ATIVIDADES REALIZADAS PELOS ALUNOS NO DECORRER DAS AULAS EXPERIMENTAIS E INVESTIGATIVAS. A ANÁLISE DOS DADOS ABRANGERÁ UMA ABORDAGEM SOBRE OS ARGUMENTOS DOS ALUNOS DE TURMAS DAS SÉRIES INICIAIS DO ENSINO FUNDAMENTAL, CONJUGANDO-SE COM O PADRÃO DE ARGUMENTAÇÃO FISHER ET AL (2002), DAS TRANSCRIÇÕES DAS FALAS ARGUMENTATIVAS DOS ALUNOS. A ANÁLISE IRÁ CONSIDERAR A PRESENÇA – OU NÃO – DOS EIXOS DA ALFABETIZAÇÃO CIENTÍFICA NAS ARGUMENTAÇÕES.
+    Palavras-chave: ALFABETIZAÇÃO CIENTÍFICA;SÉRIES INICIAIS;EXPERIMENTOS;APRENDIZAGEM COLABORATIVA;ARGUMENTAÇÃO
+    Área de Concentração: EDUCAÇÃO
+
+    CLASSE PREVISTA:
+    ALTA
+
+    (EXEMPLO CLASSE: BAIXA)
+    TEMA ESTRATÉGICO:
+    Nome: Meio Ambiente e Sustentabilidade
+    Palavras-chave: reflorestamento, recuperação de áreas degradadas, conservação, biodiversidade, agricultura de baixo carbono, economia verde, gases de efeito estufa (GEE), poluição ambiental, mudanças climáticas, sustentabilidade ambiental
+
+    PERFIL ACADÊMICO:
+    Produção: AVALIAÇÃO SOCIAL DO CICLO DE VIDA DE BIOCOMBUSTÍVEIS
+    Resumo: ATUALMENTE, OS BIOCOMBUSTÍVEIS APARECEM COMO UMA DAS PRINCIPAIS ALTERNATIVAS ENERGÉTICAS DE BAIXO CARBONO. NO ENTANTO, A MAIORIA DOS ESTUDOS FOCA APENAS NOS IMPACTOS AMBIENTAIS DOS BIOCOMBUSTÍVEIS, DESCONSIDERANDO SEUS IMPACTOS SOCIOECONÔMICOS. DESSA FORMA, O OBJETIVO DESTE TRABALHO FOI REALIZAR A AVALIAÇÃO SOCIAL DO CICLO DE VIDA DO BIODIESEL E ETANOL PRODUZIDOS DO CENTRO-OESTE BRASILEIRO ENTRE OS ANOS DE 2009 E 2019. A METODOLOGIA FOI ESTRUTURADA A PARTIR DA ISO 14040, QUE COMPÕE AS ETAPAS OBJETIVO E ESCOPO, ANÁLISE DE INVENTÁRIO, AVALIAÇÃO DOS IMPACTOS E INTERPRETAÇÃO. A UNIDADE FUNCIONAL DEFINIDA FOI UM ANO DE CICLO PRODUTIVO DE BIOCOMBUSTÍVEIS LÍQUIDOS NO CENTRO-OESTE BRASILEIRO. OS STAKEHOLDERS UTILIZADOS (TRABALHADORES, COMUNIDADE LOCAL E SOCIEDADE) FORAM DEFINIDOS A PARTIR DA LEITURA DA LITERATURA EXISTENTE. A ANÁLISE DOS IMPACTOS SOCIAIS DA PRODUÇÃO DOS BIOCOMBUSTÍVEIS FOI REALIZADA PARA CADA ATIVIDADE ECONÔMICA EXISTENTE NAS FASES AGRÍCOLA E INDUSTRIAL DO CICLO DE VIDA. A FIM DE ENTENDER A SUSTENTABILIDADE SOCIAL DO SETOR, FORAM CALCULADOS ÍNDICES DE SUSTENTABILIDADE SOCIAL (ISS). PARA TAL, FOI REALIZADA A NORMALIZAÇÃO DOS DADOS, E POSTERIORMENTE, UMA ANÁLISE MULTICRITÉRIO COM PESO 1 PARA TODAS AS CATEGORIAS DE IMPACTO AVALIADAS. OS RESULTADOS INDICAM QUE HOUVE UMA EVOLUÇÃO SOCIAL POSITIVA EM AMBAS AS FASES DO CICLO DE VIDA PRODUTIVO DOS BIOCOMBUSTÍVEIS NO PERÍODO ESTUDADO, PRINCIPALMENTE PELO AUMENTO DA ESCOLARIDADE DOS TRABALHADORES, EMPREGABILIDADE E DIMINUIÇÃO DO TRABALHO ESCRAVO. SABE-SE QUE A AVALIAÇÃO SOCIAL DO CICLO DE VIDA AINDA ENCONTRA ALGUNS OBSTÁCULOS COMO A DIFICULDADE DE MENSURAÇÃO DE DADOS QUALITATIVOS E AGREGAÇÃO DOS DADOS DISPONÍVEIS, A FIM DE SE ADEQUAR À REALIDADE. NESTE QUESITO, ESSE TRABALHO SE MOSTRA RELEVANTE, POR TER SIDO CAPAZ DE AUMENTAR A OBJETIVIDADE DA AVALIAÇÃO DE INDICADORES SOCIAIS, A PARTIR DE SUA QUANTIFICAÇÃO E DA UTILIZAÇÃO DE FERRAMENTAS ESTATÍSTICAS, COMO A ANÁLISE MULTICRITÉRIO.
+    Palavras-chave: AVALIAÇÃO SOCIAL DO CICLO DE VIDA;BIOCOMBUSTÍVEIS;INDICADORES DE SUSTENTABILIDADE SOCIAL;ANÁLISE MULTICRITÉRIO
+    Área de Concentração: ENGENHARIA AMBIENTAL
+
+    CLASSE PREVISTA:
+    BAIXA
+
+  few_shot_instruction: |
+    Aqui estão alguns exemplos de como realizar essa classificação:
+    
+    {examples}
+    
+    Agora avalie o novo caso abaixo:
+    {instruction}
+
+# -----------------------------------------------------------------------------
+# Métricas e Avaliação
+# -----------------------------------------------------------------------------
+evaluation:
+  metrics: ["accuracy", "f1_macro", "f1_weighted", "precision_macro", "recall_macro"]
+  confusion_matrix: true
+  classification_report: true
+  save_predictions: true
+
+# -----------------------------------------------------------------------------
+# Logging
+# -----------------------------------------------------------------------------
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+  capture_vram: true
+  capture_ram:  true

@@ -1,0 +1,172 @@
+{
+  "experiment": "qwen_sft_cot_3class_(recovered)",
+  "adapter": "sft_cot_3class_qwen",
+  "train_loss_history": [
+    {
+      "step": 20,
+      "loss": 1.189
+    },
+    {
+      "step": 40,
+      "loss": 0.8156
+    },
+    {
+      "step": 60,
+      "loss": 0.7406
+    },
+    {
+      "step": 80,
+      "loss": 0.7299
+    },
+    {
+      "step": 100,
+      "loss": 0.7017
+    },
+    {
+      "step": 120,
+      "loss": 0.6909
+    },
+    {
+      "step": 140,
+      "loss": 0.6773
+    },
+    {
+      "step": 160,
+      "loss": 0.6717
+    },
+    {
+      "step": 180,
+      "loss": 0.6648
+    },
+    {
+      "step": 200,
+      "loss": 0.6594
+    },
+    {
+      "step": 220,
+      "loss": 0.656
+    },
+    {
+      "step": 240,
+      "loss": 0.6503
+    },
+    {
+      "step": 260,
+      "loss": 0.5971
+    },
+    {
+      "step": 280,
+      "loss": 0.5996
+    },
+    {
+      "step": 300,
+      "loss": 0.5954
+    },
+    {
+      "step": 320,
+      "loss": 0.5923
+    },
+    {
+      "step": 340,
+      "loss": 0.5829
+    },
+    {
+      "step": 360,
+      "loss": 0.5862
+    },
+    {
+      "step": 380,
+      "loss": 0.5813
+    },
+    {
+      "step": 400,
+      "loss": 0.5713
+    },
+    {
+      "step": 420,
+      "loss": 0.5637
+    },
+    {
+      "step": 440,
+      "loss": 0.5732
+    },
+    {
+      "step": 460,
+      "loss": 0.5549
+    },
+    {
+      "step": 480,
+      "loss": 0.5486
+    },
+    {
+      "step": 500,
+      "loss": 0.4598
+    },
+    {
+      "step": 520,
+      "loss": 0.4503
+    },
+    {
+      "step": 540,
+      "loss": 0.4555
+    },
+    {
+      "step": 560,
+      "loss": 0.442
+    },
+    {
+      "step": 580,
+      "loss": 0.4431
+    },
+    {
+      "step": 600,
+      "loss": 0.4444
+    },
+    {
+      "step": 620,
+      "loss": 0.4349
+    },
+    {
+      "step": 640,
+      "loss": 0.4362
+    },
+    {
+      "step": 660,
+      "loss": 0.4443
+    },
+    {
+      "step": 680,
+      "loss": 0.4392
+    },
+    {
+      "step": 700,
+      "loss": 0.4358
+    }
+  ],
+  "eval_loss_history": [
+    {
+      "step": 200,
+      "eval_loss": 0.6543204188346863
+    },
+    {
+      "step": 400,
+      "eval_loss": 0.6079815626144409
+    },
+    {
+      "step": 600,
+      "eval_loss": 0.5733159780502319
+    }
+  ],
+  "train_runtime_seconds": 13.040304018184544,
+  "resource_stats": {
+    "experiment": "qwen_sft_cot_3class_(recovered)",
+    "start_time": 1777026941.959696,
+    "end_time": 1777026955.0,
+    "elapsed_seconds": 13.04,
+    "n_samples": 17268,
+    "throughput_samples_per_sec": 1324.2023,
+    "peak_vram_mb": 83655.3,
+    "peak_ram_mb": 106148.9,
+    "emissions_kg_co2": 7.374746621436492e-05
+  }
+}

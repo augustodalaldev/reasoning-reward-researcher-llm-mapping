@@ -1,0 +1,53 @@
+2026-04-23 19:08:04 | INFO     | sft_trainer | ============================================================
+2026-04-23 19:08:04 | INFO     | sft_trainer | Iniciando SFT | mode=3class | adapter=sft_cot_3class_qwen
+2026-04-23 19:08:04 | INFO     | sft_trainer | ============================================================
+2026-04-23 19:08:04 | INFO     | sft_trainer | Treino: 17268 | Val: 2467
+2026-04-23 19:08:04 | INFO     | sft_trainer | Carregando modelo base: unsloth/Qwen3-14B-unsloth-bnb-4bit
+2026-04-23 19:08:27 | INFO     | sft_trainer | Modelo + LoRA prontos.
+2026-04-23 19:08:32 | INFO     | sft_trainer | Datasets formatados: train=17268 | val=2467
+2026-04-23 19:08:58 | INFO     | sft_trainer | Iniciando treinamento SFT…
+2026-04-24 01:17:12 | INFO     | sft_trainer | [ResourceStats] sft_training | time=22141.8s | vram=83655.3MB | ram=106148.9MB | co2=0.291234kg
+
+2026-04-27 20:10:06 | INFO     | sft_trainer | ============================================================
+2026-04-27 20:10:06 | INFO     | sft_trainer | Iniciando SFT | mode=3class | adapter=sft_3class_qwen
+2026-04-27 20:10:06 | INFO     | sft_trainer | ============================================================
+2026-04-27 20:10:06 | INFO     | sft_trainer | Treino: 17268 | Val: 2467
+2026-04-27 20:10:06 | INFO     | sft_trainer | Carregando modelo base: unsloth/Qwen3-14B-unsloth-bnb-4bit
+2026-04-27 20:10:29 | INFO     | sft_trainer | Modelo + LoRA prontos.
+2026-04-27 20:10:33 | INFO     | sft_trainer | Datasets formatados: train=17268 | val=2467
+2026-04-27 20:10:56 | INFO     | sft_trainer | Iniciando treinamento SFT…
+2026-04-28 00:54:59 | INFO     | sft_trainer | [ResourceStats] sft_training | time=17087.3s | vram=47878.8MB | ram=106155.1MB | co2=0.225034kg
+2026-04-28 00:54:59 | INFO     | sft_trainer | Métricas de treino salvas: outputs/results/qwen_sft_3class_training_metrics.json
+2026-04-28 00:54:59 | INFO     | sft_trainer | Experimento SFT Padrão: Salvando apenas o adaptador LoRA...
+
+2026-04-29 11:03:51 | INFO     | sft_trainer | ============================================================
+2026-04-29 11:03:51 | INFO     | sft_trainer | Iniciando SFT | mode=2class | adapter=sft_cot_2class_qwen
+2026-04-29 11:03:51 | INFO     | sft_trainer | ============================================================
+2026-04-29 11:03:51 | INFO     | sft_trainer | Treino: 14873 | Val: 2125
+2026-04-29 11:03:51 | INFO     | sft_trainer | Carregando modelo base: unsloth/Qwen3-14B-unsloth-bnb-4bit
+2026-04-29 11:04:14 | INFO     | sft_trainer | Modelo + LoRA prontos.
+2026-04-29 11:04:19 | INFO     | sft_trainer | Datasets formatados: train=14873 | val=2125
+2026-04-29 11:04:45 | INFO     | sft_trainer | Iniciando treinamento SFT…
+2026-04-29 16:19:02 | INFO     | sft_trainer | [ResourceStats] sft_training | time=18904.8s | vram=83976.9MB | ram=106088.6MB | co2=0.248617kg
+2026-04-29 16:19:02 | INFO     | sft_trainer | Métricas de treino salvas: outputs/results/qwen_sft_cot_2class_training_metrics.json
+2026-04-29 16:19:02 | INFO     | sft_trainer | Experimento SFT-CoT: Salvando adapter LoRA
+2026-04-29 16:19:03 | INFO     | sft_trainer | Adapter LoRA salvo em: models/sft_cot_2class_qwen/lora_adapters
+2026-05-03 08:15:49 | INFO     | sft_trainer | ============================================================
+2026-05-03 08:15:49 | INFO     | sft_trainer | Iniciando SFT | mode=2class | adapter=sft_2class_qwen
+2026-05-03 08:15:49 | INFO     | sft_trainer | ============================================================
+2026-05-03 08:15:49 | INFO     | sft_trainer | Treino: 14873 | Val: 2125
+2026-05-03 08:15:49 | INFO     | sft_trainer | Carregando modelo base: unsloth/Qwen3-14B-unsloth-bnb-4bit
+2026-05-03 08:16:02 | INFO     | sft_trainer | Modelo + LoRA prontos.
+2026-05-03 08:16:05 | INFO     | sft_trainer | Datasets formatados: train=14873 | val=2125
+2026-05-03 08:16:27 | INFO     | sft_trainer | Iniciando treinamento SFT…
+2026-05-03 08:21:48 | INFO     | sft_trainer | ============================================================
+2026-05-03 08:21:48 | INFO     | sft_trainer | Iniciando SFT | mode=2class | adapter=sft_2class_qwen
+2026-05-03 08:21:48 | INFO     | sft_trainer | ============================================================
+2026-05-03 08:21:48 | INFO     | sft_trainer | Treino: 14873 | Val: 2125
+2026-05-03 08:21:48 | INFO     | sft_trainer | Carregando modelo base: unsloth/Qwen3-14B-unsloth-bnb-4bit
+2026-05-03 08:22:11 | INFO     | sft_trainer | Modelo + LoRA prontos.
+2026-05-03 08:22:15 | INFO     | sft_trainer | Datasets formatados: train=14873 | val=2125
+2026-05-03 08:22:37 | INFO     | sft_trainer | Iniciando treinamento SFT…
+2026-05-03 12:25:39 | INFO     | sft_trainer | [ResourceStats] sft_training | time=14624.3s | vram=47596.6MB | ram=106067.6MB | co2=0.192171kg
+2026-05-03 12:25:39 | INFO     | sft_trainer | Métricas de treino salvas: outputs/results/qwen_sft_2class_training_metrics.json
+2026-05-03 12:25:39 | INFO     | sft_trainer | Experimento SFT Padrão: Salvando apenas o adaptador LoRA...

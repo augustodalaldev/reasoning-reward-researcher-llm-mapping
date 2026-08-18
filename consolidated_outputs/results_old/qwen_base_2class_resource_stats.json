@@ -1,0 +1,12 @@
+{
+  "experiment": "inference_base",
+  "start_time": 16340991.07252732,
+  "end_time": 16341311.602397555,
+  "elapsed_seconds": 320.53,
+  "n_samples": 4250,
+  "throughput_samples_per_sec": 13.2593,
+  "peak_vram_mb": 0.0,
+  "peak_ram_mb": 682.57,
+  "emissions_kg_co2": 0.004065677902590837,
+  "extra": {}
+}

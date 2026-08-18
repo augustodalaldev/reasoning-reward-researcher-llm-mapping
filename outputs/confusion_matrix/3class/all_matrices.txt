@@ -1,0 +1,83 @@
+
+============================================================
+MODELO: qwen_3class_base
+Respostas com formato válido: 4934 de 4934 (100.00%) (0 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |   1074 |      57 |       0 |
+| MEDIA  |    491 |     169 |       6 |
+| BAIXA  |   1073 |    1885 |     179 |
+
+
+
+============================================================
+MODELO: qwen_3class_few_shot
+Respostas com formato válido: 4934 de 4934 (100.00%) (0 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |   1070 |      61 |       0 |
+| MEDIA  |    502 |     161 |       3 |
+| BAIXA  |   1160 |    1856 |     121 |
+
+
+
+============================================================
+MODELO: qwen_3class_sft
+Respostas com formato válido: 4934 de 4934 (100.00%) (0 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |    492 |     175 |     464 |
+| MEDIA  |     39 |      73 |     554 |
+| BAIXA  |     20 |      83 |    3034 |
+
+
+
+============================================================
+MODELO: qwen_3class_sft_cot
+Respostas com formato válido: 4934 de 4934 (100.00%) (0 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |    853 |     112 |     166 |
+| MEDIA  |    173 |     148 |     345 |
+| BAIXA  |    165 |     239 |    2733 |
+
+
+
+============================================================
+MODELO: qwen_3class_grpo_standard
+Respostas com formato válido: 4918 de 4934 (99.68%) (16 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |    951 |      82 |      96 |
+| MEDIA  |    257 |      82 |     324 |
+| BAIXA  |    200 |     133 |    2793 |
+
+
+
+============================================================
+MODELO: qwen_3class_grpo_distance
+Respostas com formato válido: 4878 de 4934 (98.87%) (56 não consideradas)
+============================================================
+
+[Versão em texto Markdown]
+| Real   |   ALTA |   MEDIA |   BAIXA |
+|:-------|-------:|--------:|--------:|
+| ALTA   |    870 |     168 |      86 |
+| MEDIA  |    168 |     199 |     292 |
+| BAIXA  |    163 |     221 |    2711 |
+

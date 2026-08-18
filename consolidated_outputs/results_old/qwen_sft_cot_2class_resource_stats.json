@@ -1,0 +1,12 @@
+{
+  "experiment": "inference_sft_cot",
+  "start_time": 16342300.028109556,
+  "end_time": 16342930.763019921,
+  "elapsed_seconds": 630.735,
+  "n_samples": 4250,
+  "throughput_samples_per_sec": 6.7382,
+  "peak_vram_mb": 0.0,
+  "peak_ram_mb": 711.67,
+  "emissions_kg_co2": 0.00808135303992738,
+  "extra": {}
+}

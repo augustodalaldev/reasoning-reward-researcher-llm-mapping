@@ -1,0 +1,101 @@
+{
+  "experiment": "qwen_sft_3class",
+  "adapter": "sft_3class_qwen",
+  "train_loss_history": [
+    {
+      "step": 20,
+      "loss": 1.1875
+    },
+    {
+      "step": 40,
+      "loss": 0.9003
+    },
+    {
+      "step": 60,
+      "loss": 0.8304
+    },
+    {
+      "step": 80,
+      "loss": 0.7946
+    },
+    {
+      "step": 100,
+      "loss": 0.7784
+    },
+    {
+      "step": 120,
+      "loss": 0.7649
+    },
+    {
+      "step": 140,
+      "loss": 0.7457
+    },
+    {
+      "step": 160,
+      "loss": 0.7196
+    },
+    {
+      "step": 180,
+      "loss": 0.7073
+    },
+    {
+      "step": 200,
+      "loss": 0.704
+    },
+    {
+      "step": 220,
+      "loss": 0.7014
+    },
+    {
+      "step": 240,
+      "loss": 0.6946
+    },
+    {
+      "step": 260,
+      "loss": 0.6849
+    },
+    {
+      "step": 280,
+      "loss": 0.6394
+    },
+    {
+      "step": 300,
+      "loss": 0.6164
+    },
+    {
+      "step": 320,
+      "loss": 0.6096
+    },
+    {
+      "step": 340,
+      "loss": 0.6088
+    },
+    {
+      "step": 360,
+      "loss": 0.6072
+    },
+    {
+      "step": 380,
+      "loss": 0.6047
+    }
+  ],
+  "eval_loss_history": [
+    {
+      "step": 200,
+      "eval_loss": 0.7239843606948853
+    }
+  ],
+  "train_runtime_seconds": 17040.7383,
+  "resource_stats": {
+    "experiment": "sft_training",
+    "start_time": 15850118.053560305,
+    "end_time": 15867205.343850885,
+    "elapsed_seconds": 17087.29,
+    "n_samples": 17268,
+    "throughput_samples_per_sec": 1.0106,
+    "peak_vram_mb": 47878.81,
+    "peak_ram_mb": 106155.09,
+    "emissions_kg_co2": 0.2250336856354585,
+    "extra": {}
+  }
+}

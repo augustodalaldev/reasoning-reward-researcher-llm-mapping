@@ -1,0 +1,71 @@
+
+2026-04-24 11:12:06 | INFO     | grpo_trainer | ============================================================
+2026-04-24 11:12:06 | INFO     | grpo_trainer | Iniciando GRPO | mode=3class | adapter=grpo_standard_3class_qwen
+2026-04-24 11:12:06 | INFO     | grpo_trainer | ============================================================
+2026-04-24 11:12:07 | INFO     | grpo_trainer | Treino: 17268 | Val: 2467 (GRPO usa apenas treino)
+2026-04-24 11:12:12 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_3class_qwen/lora_adapters
+2026-04-24 11:14:20 | INFO     | grpo_trainer | Modelo + LoRA prontos para GRPO.
+2026-04-24 11:14:23 | INFO     | grpo_trainer | Dataset GRPO formatado: 17268 amostras
+2026-04-24 11:14:24 | INFO     | grpo_trainer | Iniciando treinamento GRPO…
+2026-04-25 21:45:05 | INFO     | grpo_trainer | [ResourceStats] grpo_training | time=124372.4s | vram=78383.2MB | ram=59260.0MB | co2=1.640476kg
+2026-04-25 21:45:05 | INFO     | grpo_trainer | Métricas GRPO salvas: outputs/results/qwen_grpo_standard_3class_training_metrics.json
+2026-04-25 21:45:06 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_standard_3class_qwen
+2026-04-25 21:45:06 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_standard_3class_qwen
+2026-04-25 21:45:07 | INFO     | grpo_trainer | Fundindo LoRA no modelo base (16-bit) para vLLM...
+2026-04-25 21:50:08 | INFO     | grpo_trainer | Modelo fundido salvo com sucesso para vLLM em: models/grpo_standard_3class_qwen
+
+2026-04-25 23:34:05 | INFO     | grpo_trainer | ============================================================
+2026-04-25 23:34:05 | INFO     | grpo_trainer | Iniciando GRPO | mode=3class | adapter=grpo_distance_3class_qwen
+2026-04-25 23:34:05 | INFO     | grpo_trainer | ============================================================
+2026-04-25 23:34:05 | INFO     | grpo_trainer | Treino: 17268 | Val: 2467 (GRPO usa apenas treino)
+2026-04-25 23:34:11 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_3class_qwen/lora_adapters
+2026-04-25 23:35:01 | INFO     | grpo_trainer | Modelo + LoRA prontos para GRPO.
+2026-04-25 23:35:05 | INFO     | grpo_trainer | Dataset GRPO formatado: 17268 amostras
+2026-04-25 23:35:05 | INFO     | grpo_trainer | Iniciando treinamento GRPO…
+2026-04-27 10:16:01 | INFO     | grpo_trainer | [ResourceStats] grpo_training | time=124910.0s | vram=78038.3MB | ram=59175.9MB | co2=1.647913kg
+2026-04-27 10:16:01 | INFO     | grpo_trainer | Métricas GRPO salvas: outputs/results/qwen_grpo_distance_3class_training_metrics.json
+2026-04-27 10:16:02 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_distance_3class_qwen
+2026-04-27 10:16:02 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_distance_3class_qwen
+2026-04-27 10:16:03 | INFO     | grpo_trainer | Fundindo LoRA no modelo base (16-bit) para vLLM...
+2026-04-27 10:21:18 | INFO     | grpo_trainer | Modelo fundido salvo com sucesso para vLLM em: models/grpo_distance_3class_qwen
+
+2026-04-30 17:12:04 | INFO     | grpo_trainer | ============================================================
+2026-04-30 17:12:04 | INFO     | grpo_trainer | Iniciando GRPO | mode=2class | adapter=grpo_standard_2class_qwen
+2026-04-30 17:12:04 | INFO     | grpo_trainer | ============================================================
+2026-04-30 17:12:04 | INFO     | grpo_trainer | Treino: 14873 | Val: 2125 (GRPO usa apenas treino)
+2026-04-30 17:12:10 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters
+2026-04-30 17:13:02 | INFO     | grpo_trainer | Modelo + LoRA prontos para GRPO.
+2026-04-30 17:13:05 | INFO     | grpo_trainer | Dataset GRPO formatado: 14873 amostras
+2026-04-30 17:13:05 | INFO     | grpo_trainer | Iniciando treinamento GRPO…
+2026-05-01 22:26:14 | INFO     | grpo_trainer | [ResourceStats] grpo_training | time=105243.6s | vram=78394.9MB | ram=59102.9MB | co2=1.388300kg
+2026-05-01 22:26:14 | INFO     | grpo_trainer | Métricas GRPO salvas: outputs/results/qwen_grpo_standard_2class_training_metrics.json
+2026-05-01 22:26:15 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_standard_2class_qwen
+2026-05-02 00:41:43 | INFO     | grpo_trainer | ============================================================
+2026-05-02 00:41:43 | INFO     | grpo_trainer | Iniciando GRPO | mode=2class | adapter=grpo_distance_2class_qwen
+2026-05-02 00:41:43 | INFO     | grpo_trainer | ============================================================
+2026-05-02 00:41:44 | INFO     | grpo_trainer | Treino: 14873 | Val: 2125 (GRPO usa apenas treino)
+2026-05-02 00:41:49 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters
+2026-05-02 00:42:39 | INFO     | grpo_trainer | Modelo + LoRA prontos para GRPO.
+2026-05-02 00:42:43 | INFO     | grpo_trainer | Dataset GRPO formatado: 14873 amostras
+2026-05-02 00:42:43 | INFO     | grpo_trainer | Iniciando treinamento GRPO…
+2026-05-02 18:11:15 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:11:15 | INFO     | grpo_trainer | Iniciando GRPO | mode=2class | adapter=grpo_distance_2class_qwen
+2026-05-02 18:11:15 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:11:15 | INFO     | grpo_trainer | Treino: 14873 | Val: 2125 (GRPO usa apenas treino)
+2026-05-02 18:11:21 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters
+2026-05-02 18:13:07 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:13:07 | INFO     | grpo_trainer | Iniciando GRPO | mode=2class | adapter=grpo_distance_2class_qwen
+2026-05-02 18:13:07 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:13:07 | INFO     | grpo_trainer | Treino: 14873 | Val: 2125 (GRPO usa apenas treino)
+2026-05-02 18:13:12 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters
+2026-05-02 18:14:51 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:14:51 | INFO     | grpo_trainer | Iniciando GRPO | mode=2class | adapter=grpo_distance_2class_qwen
+2026-05-02 18:14:51 | INFO     | grpo_trainer | ============================================================
+2026-05-02 18:14:51 | INFO     | grpo_trainer | Treino: 14873 | Val: 2125 (GRPO usa apenas treino)
+2026-05-02 18:14:56 | INFO     | grpo_trainer | Carregando sft_cot mergeado: /home/augusto/paper_2026/experiments/paper2026/models/sft_cot_2class_qwen/lora_adapters
+2026-05-02 18:15:47 | INFO     | grpo_trainer | Modelo + LoRA prontos para GRPO.
+2026-05-02 18:15:51 | INFO     | grpo_trainer | Dataset GRPO formatado: 14873 amostras
+2026-05-02 18:15:51 | INFO     | grpo_trainer | Iniciando treinamento GRPO…
+2026-05-03 07:56:29 | INFO     | grpo_trainer | [ResourceStats] grpo_training | time=49292.2s | vram=78503.5MB | ram=58187.6MB | co2=0.650405kg
+2026-05-03 07:56:29 | INFO     | grpo_trainer | Métricas GRPO salvas: outputs/results/qwen_grpo_distance_2class_training_metrics.json
+2026-05-03 07:56:29 | INFO     | grpo_trainer | Adapter GRPO salvo em: models/grpo_distance_2class_qwen

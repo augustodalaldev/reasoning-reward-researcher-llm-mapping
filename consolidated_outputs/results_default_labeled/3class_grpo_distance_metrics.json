@@ -1,0 +1,44 @@
+{
+  "experiment": "grpo_distance",
+  "n_total": 4934,
+  "n_unknown": 0,
+  "n_evaluated": 4934,
+  "accuracy": 0.7746,
+  "f1_macro": 0.6467,
+  "f1_weighted": 0.7711,
+  "precision_macro": 0.6461,
+  "recall_macro": 0.6485,
+  "classification_report": {
+    "BAIXA": {
+      "precision": 0.8753577106518283,
+      "recall": 0.8775900541919031,
+      "f1-score": 0.8764724609996817,
+      "support": 3137.0
+    },
+    "MEDIA": {
+      "precision": 0.33843537414965985,
+      "recall": 0.2987987987987988,
+      "f1-score": 0.31738437001594894,
+      "support": 666.0
+    },
+    "ALTA": {
+      "precision": 0.7243963363863447,
+      "recall": 0.7692307692307693,
+      "f1-score": 0.7461406518010292,
+      "support": 1131.0
+    },
+    "accuracy": 0.7746250506688286,
+    "macro avg": {
+      "precision": 0.6460631403959444,
+      "recall": 0.6485398740738236,
+      "f1-score": 0.6466658276055532,
+      "support": 4934.0
+    },
+    "weighted avg": {
+      "precision": 0.7682787502941659,
+      "recall": 0.7746250506688286,
+      "f1-score": 0.7711303562573141,
+      "support": 4934.0
+    }
+  }
+}

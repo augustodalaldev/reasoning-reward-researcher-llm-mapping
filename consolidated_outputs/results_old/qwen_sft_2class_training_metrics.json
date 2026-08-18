@@ -1,0 +1,93 @@
+{
+  "experiment": "qwen_sft_2class",
+  "adapter": "sft_2class_qwen",
+  "train_loss_history": [
+    {
+      "step": 20,
+      "loss": 1.1939
+    },
+    {
+      "step": 40,
+      "loss": 0.9065
+    },
+    {
+      "step": 60,
+      "loss": 0.8446
+    },
+    {
+      "step": 80,
+      "loss": 0.8035
+    },
+    {
+      "step": 100,
+      "loss": 0.785
+    },
+    {
+      "step": 120,
+      "loss": 0.7708
+    },
+    {
+      "step": 140,
+      "loss": 0.7823
+    },
+    {
+      "step": 160,
+      "loss": 0.782
+    },
+    {
+      "step": 180,
+      "loss": 1.0513
+    },
+    {
+      "step": 200,
+      "loss": 0.7363
+    },
+    {
+      "step": 220,
+      "loss": 0.7241
+    },
+    {
+      "step": 240,
+      "loss": 0.6958
+    },
+    {
+      "step": 260,
+      "loss": 0.6761
+    },
+    {
+      "step": 280,
+      "loss": 0.6722
+    },
+    {
+      "step": 300,
+      "loss": 0.6686
+    },
+    {
+      "step": 320,
+      "loss": 0.6678
+    },
+    {
+      "step": 340,
+      "loss": 0.6664
+    }
+  ],
+  "eval_loss_history": [
+    {
+      "step": 200,
+      "eval_loss": 0.7508261799812317
+    }
+  ],
+  "train_runtime_seconds": 14578.6414,
+  "resource_stats": {
+    "experiment": "sft_training",
+    "start_time": 16326020.742453542,
+    "end_time": 16340645.053336484,
+    "elapsed_seconds": 14624.311,
+    "n_samples": 14873,
+    "throughput_samples_per_sec": 1.017,
+    "peak_vram_mb": 47596.6,
+    "peak_ram_mb": 106067.55,
+    "emissions_kg_co2": 0.19217141385002978,
+    "extra": {}
+  }
+}
