@@ -9,16 +9,7 @@
 
 # Abstract
 
-Mapping researcher profiles to strategic topics is a key challenge in
-the Brazilian National Graduate System (SNPG), as it supports public policy
-planning and research funding allocation. To address this problem, this paper
-proposes TORNADO, a TwO-stage ReasoNing–rewArD Optimization method
-that combines reasoning supervision and reward optimization. Its main contri-
-bution is a distance-aware reward that models the ordinal structure of affinity
-labels by penalizing severe errors more than adjacent-class mistakes. Experi-
-ments on the LeanDL-HPC dataset show that TORNADO outperforms zero-shot,
-few-shot, and conventional supervised fine-tuning baselines, providing an effi-
-cient and scalable alternative for strategic decision-making within the SNPG.
+Mapping researcher profiles to strategic topics is a key challenge in the Brazilian National Graduate System (SNPG), as it supports public policy planning and research funding allocation. To address this problem, this paper proposes TORNADO, a TwO-stage ReasoNing–rewArD Optimization method that combines reasoning supervision and reward optimization. Its main contribution is a distance-aware reward that models the ordinal structure of affinity labels by penalizing severe errors more than adjacent-class mistakes. Experiments on the LeanDL-HPC dataset show that TORNADO outperforms zero-shot, few-shot, and conventional supervised fine-tuning baselines, providing an efficient and scalable alternative for strategic decision-making within the SNPG.
 
 
 # Original Datasets (LeanDL-HPC 2025 Challenge)
